@@ -1,0 +1,72 @@
+#include<GL/glut.h>
+#include<GL/glu.h>
+#include<bits/stdc++.h>
+using namespace std;
+
+float startX=-1.0f;
+float stopX=1.0f;
+float currentX=startX;
+float t=0.0f;
+float speed=0.01f;
+bool forward=true;
+
+void initialize() {
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glPointSize(1.0);
+    glLineWidth(2.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+
+}
+
+void display() {
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(currentX, 0.0f, 0.0f);
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+    glVertex2f(-0.1f, -0.005f);
+    glVertex2f(0.1f, -0.005f);
+    glVertex2f(0.1f, 0.005f);
+    glVertex2f(-0.1f, 0.005f);
+    glEnd();
+    glutSwapBuffers();
+
+}
+void update(int value){
+    currentX=(1-t)*startX + t*stopX;
+    if(forward){
+        t+=speed;
+    }
+
+    if(t>=1.0f){
+        t=0.0f;
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(16, update,0);
+}
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+    glutInitWindowSize(600,400);
+    glutInitWindowPosition(10,10);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+
+    initialize();
+    glutCreateWindow("Simple Animations");
+
+    glutDisplayFunc(display);
+
+    glutTimerFunc(0, update, 0);
+
+
+    glutMainLoop();
+
+    return 0;
+}
+
